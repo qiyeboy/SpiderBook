@@ -13,7 +13,7 @@ class XMLSpider(XMLFeedSpider):
     def adapt_response(self,response):
        return response
 
-def parse_node(self, response, node):
-    print node.xpath('id/text()').extract()[0]
-    print node.xpath('title/text()').extract()[0]
-    print node.xpath('summary/text()').extract()[0]
+    def parse_node(self, response, node):
+        print node.xpath('id/text()').extract()[0]
+        print node.xpath('title/text()').extract()[0]
+        print node.xpath('summary/text()').extract()[0]

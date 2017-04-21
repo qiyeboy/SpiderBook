@@ -45,7 +45,7 @@ class CnblogsSpider(CrawlSpider):
     start_urls = [
     "http://www.cnblogs.com/qiyeboy/default.html?page=1"
     ]
-        rules = (
+    rules = (
             Rule(LinkExtractor(allow=("/qiyeboy/default.html\?page=\d{1,}",)),
                       follow=True,
                       callback='parse_item'
