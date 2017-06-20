@@ -26,7 +26,7 @@ task=manager.get_task_queue()
 result=manager.get_result_queue()
 
 #实现第六步：添加任务
-for url in ["ImageUrl_"+i for i in range(10)]:
+for url in ["ImageUrl_"+str(i) for i in range(10)]:
     print 'put task %s ...' %url
     task.put(url) 
 #获取返回结果
