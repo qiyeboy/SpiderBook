@@ -1,11 +1,9 @@
 #coding:utf-8
-from ch06.URLManager import UrlManager
+from URLManager import UrlManager
+from HtmlDownloader import HtmlDownloader
+from HtmlParser import HtmlParser
 
-from ch06.HtmlDownloader import HtmlDownloader
-
-from ch06.HtmlParser import HtmlParser
-
-from ch06.DataOutput import DataOutput
+from DataOutput import DataOutput
 
 
 class SpiderMan(object):

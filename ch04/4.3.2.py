@@ -22,7 +22,7 @@ print soup.title.name
 soup.title.name = 'mytitle'
 print soup.title
 print soup.mytitle
-soup.title.name = 'title'
+soup.mytitle.name = 'title'
 print soup.p['class']
 print soup.p.get('class')
 

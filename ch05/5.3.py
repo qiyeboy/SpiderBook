@@ -15,7 +15,7 @@ password = 'pass'
 #收件人地址
 to_addr = 'xxxxxxxx@qq.com'
 #163网易邮箱服务器地址
-smtp_server = 'smtp.163.com '
+smtp_server = 'smtp.163.com'
 #设置邮件信息
 msg = MIMEText('Python爬虫运行异常，异常信息为遇到HTTP 403', 'plain', 'utf-8')
 msg['From'] = _format_addr('一号爬虫 <%s>' % from_addr)

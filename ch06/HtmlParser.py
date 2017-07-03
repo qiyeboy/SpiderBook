@@ -30,7 +30,10 @@ class HtmlParser(object):
         '''
         new_urls = set()
         #抽取符合要求的a标签
-        links = soup.find_all('a',href=re.compile(r'/view/\d+\.htm'))
+        #原书代码
+        # links = soup.find_all('a',href=re.compile(r'/view/\d+\.htm'))
+        #2017-07-03 更新,原因百度词条的链接形式发生改变
+        links = soup.find_all('a', href=re.compile(r'/item/.*'))
         for link in links:
             #提取href属性
             new_url = link['href']
