@@ -1,5 +1,5 @@
 #coding:utf-8
-from scrapy.dupefilter import RFPDupeFilter
+from scrapy.dupefilters import RFPDupeFilter
 class URLFilter(RFPDupeFilter):
       """根据url过滤"""
       def __init__(self, path=None,debug=False):
@@ -12,7 +12,7 @@ class URLFilter(RFPDupeFilter):
               self.urls_seen.add(request.url)
 
 '''
-from scrapy.dupefilter import RFPDupeFilter
+from scrapy.dupefilters import RFPDupeFilter
 from w3lib.util.url import canonicalize_url
 class URLSha1Filter(RFPDupeFilter):
       """根据urlsha1过滤"""
