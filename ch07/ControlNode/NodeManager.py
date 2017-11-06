@@ -4,8 +4,8 @@ from multiprocessing.managers import BaseManager
 
 import time
 
-from ControlNode.DataOutput import DataOutput
-from ControlNode.UrlManager import UrlManager
+from DataOutput import DataOutput
+from UrlManager import UrlManager
 
 
 class NodeManager(object):

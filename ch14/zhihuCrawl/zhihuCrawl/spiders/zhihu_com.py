@@ -57,8 +57,8 @@ class ZhihuComSpider(CrawlSpider):
             meta={'cookiejar': response.meta['cookiejar']},
             formdata={
                 '_xsrf': self.xsrf,
-                'phone_num': 'xxxxxxxx',
-                'password': 'xxxxxxxx',
+                'phone_num': 'xxxxxx',
+                'password': 'xxxxxx',
                 'captcha_type': 'cn'},
             callback=self.after_login
         )]

@@ -1,7 +1,6 @@
 #coding:utf-8
 import bs4
 from bs4 import BeautifulSoup
-
 html_str = """
 <html><head><title>The Dormouse's story</title></head>
 <body>

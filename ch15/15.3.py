@@ -2,7 +2,7 @@
 from scrapy.dupefilter import RFPDupeFilter
 class URLFilter(RFPDupeFilter):
       """根据url过滤"""
-      def __init__(self, path=None):
+      def __init__(self, path=None,debug=False):
         self.urls_seen = set()
         RFPDupeFilter.__init__(self, path)
       def request_seen(self, request):
@@ -16,7 +16,7 @@ from scrapy.dupefilter import RFPDupeFilter
 from w3lib.util.url import canonicalize_url
 class URLSha1Filter(RFPDupeFilter):
       """根据urlsha1过滤"""
-      def __init__(self, path=None):
+      def __init__(self, path=None,debug=False):
         self.urls_seen = set()
         RFPDupeFilter.__init__(self, path)
       def request_seen(self, request):
@@ -33,7 +33,7 @@ class URLSha1Filter(RFPDupeFilter):
 '''
 class URLBloomFilter(RFPDupeFilter):
       """根据urlhash_bloom过滤"""
-      def __init__(self, path=None):
+      def __init__(self, path=None,debug=False):
         self.urls_sbf = ScalableBloomFilter(mode=ScalableBloomFilter.SMALL_SET_GROWTH)
         RFPDupeFilter.__init__(self, path)
 

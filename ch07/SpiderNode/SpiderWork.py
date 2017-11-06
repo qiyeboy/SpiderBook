@@ -1,7 +1,8 @@
 #coding:utf-8
 from multiprocessing.managers import BaseManager
-from SpiderNode.HtmlDownloader import HtmlDownloader
-from SpiderNode.HtmlParser import HtmlParser
+
+from HtmlDownloader import HtmlDownloader
+from HtmlParser import HtmlParser
 
 
 class SpiderWork(object):
