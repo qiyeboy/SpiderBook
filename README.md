@@ -11,19 +11,18 @@
 ### 书或者代码中的问题会在 [勘误表](勘误表.md) 中修正，敬请查看。
 #### 在github中提出书中错误最多的三个人，我将在再次印刷的时候送给他们每人一套实体书，以表示我的感谢。
 
-
-   | github ID        | 纠错个数    |  排名  |
-    | --------   | -----  | ----|
-    | @yaleimeng        | 7      |   1    |
-    | @Judy0513        | 5      |   2    |
-    | @wushicanASL        | 3      |   3    |
-    | @jsqlzy        | 2      |   4    |
-    | @heqingbao        | 2      |   4    |
-    | @exl2        | 2      |   4    |
-    | @lg-Cat73        | 1      |   5    |
-    | @shaodamao        | 1      |   5    |
-    | @BillWing726        | 1      |   5    |
-    | @wsl-victor        | 1      |   5    |
-    | @liyang610        | 1      |   5    |
-    | @Dang9527        | 1      |   5    |
+| github ID   | 纠错个数    |  排名  |
+| --------   | -----  | ----|
+| @yaleimeng        | 7      |   1    |
+| @Judy0513        | 5      |   2    |
+| @wushicanASL        | 3      |   3    |
+| @jsqlzy        | 2      |   4    |
+| @heqingbao        | 2      |   4    |
+| @exl2        | 2      |   4    |
+| @lg-Cat73        | 1      |   5    |
+| @shaodamao        | 1      |   5    |
+| @BillWing726        | 1      |   5    |
+| @wsl-victor        | 1      |   5    |
+| @liyang610        | 1      |   5    |
+| @Dang9527        | 1      |   5    |
 
