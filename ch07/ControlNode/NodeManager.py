@@ -1,8 +1,10 @@
 #coding:utf-8
-from multiprocessing import Queue, Process
+
 from multiprocessing.managers import BaseManager
 
 import time
+
+from multiprocessing import Process, Queue
 
 from DataOutput import DataOutput
 from UrlManager import UrlManager
@@ -93,6 +95,7 @@ class NodeManager(object):
 
 if __name__=='__main__':
     #初始化4个队列
+
     url_q = Queue()
     result_q = Queue()
     store_q = Queue()
