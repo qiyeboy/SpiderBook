@@ -29,7 +29,7 @@ class SpiderMan(object):
                 #数据存储器储存文件
                 self.output.store_data(data)
                 print "已经抓取%s个链接"%self.manager.old_url_size()
-            except Exception,e:
+            except Exception as e:
                 print "crawl failed"
             #数据存储器将文件输出成指定格式
         self.output.output_html()

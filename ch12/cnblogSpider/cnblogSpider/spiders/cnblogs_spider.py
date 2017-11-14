@@ -22,7 +22,7 @@ class CnblogsSpider(scrapy.Spider):
             url = paper.xpath(".//*[@class='postTitle']/a/@href").extract()[0]
             title = paper.xpath(".//*[@class='postTitle']/a/text()").extract()[0]
             time = paper.xpath(".//*[@class='dayTitle']/a/text()").extract()[0]
-            content = paper.xpath(".//*[@class='postCon']/a/text()").extract()[0]
+            content = paper.xpath(".//*[@class='postCon']/div/text()").extract()[0]
             item = CnblogspiderItem(url=url, title=title, time=time, content=content)
             request = scrapy.Request(url=url, callback=self.parse_body)
             request.meta['item'] = item  # 将item暂存

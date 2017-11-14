@@ -10,7 +10,7 @@ class DataOutput(object):
         if data is None:
             return
         self.datas.append(data)
-        if len(self.datas)>0:
+        if len(self.datas)>10:
             self.output_html(self.filepath)
 
 
@@ -38,7 +38,7 @@ class DataOutput(object):
             fout.write("<td>%s</td>"%data['title'])
             fout.write("<td>%s</td>"%data['summary'])
             fout.write("</tr>")
-            self.datas.remove(data)
+        self.datas=[]
         fout.close()
 
     def ouput_end(self,path):

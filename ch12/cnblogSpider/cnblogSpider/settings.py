@@ -81,7 +81,7 @@ ITEM_PIPELINES = {
    'cnblogSpider.pipelines.CnblogspiderPipeline': 300,
    'scrapy.pipelines.images.ImagesPipeline':1
 }
-IMAGES_STORE = 'F:\\cnblogs'
+IMAGES_STORE = 'D:\\cnblogs'
 IMAGES_URLS_FIELD = 'cimage_urls'
 IMAGES_RESULT_FIELD = 'cimages'
 IMAGES_EXPIRES = 30

@@ -17,5 +17,5 @@ for mulu in soup.find_all(class_="mulu"):
             box_title = a.get('title')
             list.append({'href':href,'box_title':box_title})
         content.append({'title':h2_title,'content':list})
-with open('qiye.json','wb') as fp:
+with open('qiye.json','w') as fp:
     json.dump(content,fp=fp,indent=4)

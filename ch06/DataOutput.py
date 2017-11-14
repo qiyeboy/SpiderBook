@@ -22,7 +22,7 @@ class DataOutput(object):
             fout.write("<td>%s</td>"%data['title'])
             fout.write("<td>%s</td>"%data['summary'])
             fout.write("</tr>")
-            self.datas.remove(data)
+
         fout.write("</table>")
         fout.write("</body>")
         fout.write("</html>")
