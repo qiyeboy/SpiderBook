@@ -6,6 +6,8 @@ class DataOutput(object):
         self.filepath='baike_%s.html'%(time.strftime("%Y_%m_%d_%H_%M_%S", time.localtime()) )
         self.output_head(self.filepath)
         self.datas=[]
+
+
     def store_data(self,data):
         if data is None:
             return
@@ -21,9 +23,11 @@ class DataOutput(object):
         '''
         fout=codecs.open(path,'w',encoding='utf-8')
         fout.write("<html>")
+        fout.write(r'''<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />''')
         fout.write("<body>")
         fout.write("<table>")
         fout.close()
+
 
     def output_html(self,path):
         '''
@@ -37,9 +41,10 @@ class DataOutput(object):
             fout.write("<td>%s</td>"%data['url'])
             fout.write("<td>%s</td>"%data['title'])
             fout.write("<td>%s</td>"%data['summary'])
-            fout.write("</tr>")
+            fout.write("</tr>") 
         self.datas=[]
         fout.close()
+
 
     def ouput_end(self,path):
         '''
