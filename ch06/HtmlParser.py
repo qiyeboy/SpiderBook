@@ -1,6 +1,6 @@
 #coding:utf-8
 import re
-import urlparse
+import urllib.parse
 from bs4 import BeautifulSoup
 
 
@@ -38,7 +38,7 @@ class HtmlParser(object):
             #提取href属性
             new_url = link['href']
             #拼接成完整网址
-            new_full_url = urlparse.urljoin(page_url,new_url)
+            new_full_url = urllib.parse.urljoin(page_url,new_url)
             new_urls.add(new_full_url)
         return new_urls
     def _get_new_data(self,page_url,soup):
