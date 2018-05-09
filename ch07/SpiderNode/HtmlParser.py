@@ -1,10 +1,25 @@
 #coding:utf-8
 import re
 import urllib.parse
+import logging  
 from bs4 import BeautifulSoup
+import pprint
 
+from .HtmlDownloader import HtmlDownloader
 
-class HtmlParser(object):
+class HtmlParser:
+    def __init__(self, cfg):
+        self.url_fiter_keys = cfg["url_fiter_keys"]
+        self.url_reverse_keys = cfg["url_reverse_keys"]
+
+    def url_fiter_keys(self, urls):
+        for url in urls:
+            for url_fiter_key in url_fiter_keys:
+                if url_fiter_key in url:
+                    return False
+            for url_reverse_key in url_reverse_keys:
+                if url_reverse_key in url:
+                    return True
 
     def parser(self,page_url,html_cont):
         '''
@@ -33,6 +48,7 @@ class HtmlParser(object):
         # 原书代码
         # links = soup.find_all('a', href=re.compile(r'/view/\d+\.htm'))
         #2017-07-03 更新,原因百度词条的链接形式发生改变
+        '''
         links = soup.find_all('a',href=re.compile(r'/item/.*'))
         for link in links:
             #提取href属性
@@ -41,12 +57,25 @@ class HtmlParser(object):
             new_full_url = urllib.parse.urljoin(page_url,new_url)
             new_urls.add(new_full_url)
         return new_urls
+        '''
+        for link in soup.find_all('a'):
+            if link.get('href') and link.get('href').startswith("http"):
+                #print(link.get('href'))
+                new_urls.add(link.get('href'))
+        #pprint.PrettyPrinter(indent=4).pprint(new_urls)
+        filter(self.url_fiter_keys, new_urls)
+        #new_urls = set(url for url in new_urls if "dxy" in(url))
+        #pprint.PrettyPrinter(indent=4).pprint(new_urls)
+        logging.info(new_urls)  
+        return new_urls
+
     def _get_new_data(self,page_url,soup):
         '''
         抽取有效数据
         :param page_url:下载页面的URL
         :param soup:
         :return:返回有效数据
+        '''
         '''
         data={}
         data['url']=page_url
@@ -56,3 +85,20 @@ class HtmlParser(object):
         #获取到tag中包含的所有文版内容包括子孙tag中的内容,并将结果作为Unicode字符串返回
         data['summary']=summary.get_text()
         return data
+        '''
+        data={}
+        data['url']=page_url
+        data['summary']=[]
+        for p in soup.find_all('p'):
+            #print(p)
+            for string in p.stripped_strings:
+                #print(repr(string))
+                data['summary'].append(string)
+        logging.info(data)
+        return data
+
+
+if __name__ == "__main__":
+    url="http://www.dxy.cn"
+    content = HtmlDownloader().download(url)
+    new_urls,data = HtmlParser().parser(url,content)

@@ -1,9 +1,11 @@
 #coding:utf-8
 from multiprocessing.managers import BaseManager
+import logging
+import chardet
 
 from .HtmlDownloader import HtmlDownloader
 from .HtmlParser import HtmlParser
-
+from .ReadRemoteCfg import ReadRemoteCfg
 
 class SpiderWork(object):
     def __init__(self):
@@ -12,7 +14,8 @@ class SpiderWork(object):
         BaseManager.register('get_task_queue')
         BaseManager.register('get_result_queue')
         # 实现第二步：连接到服务器:
-        server_addr = '127.0.0.1'
+        #server_addr = '192.168.100.41'
+        server_addr = '0.0.0.0'
         print(('Connect to server %s...' % server_addr))
         # 端口和验证口令注意保持与服务进程设置的完全一致:
         self.m = BaseManager(address=(server_addr, 8001), authkey='baike'.encode('utf-8'))
@@ -23,7 +26,10 @@ class SpiderWork(object):
         self.result = self.m.get_result_queue()
         #初始化网页下载器和解析器
         self.downloader = HtmlDownloader()
-        self.parser = HtmlParser()
+
+        readRemoteCfg = ReadRemoteCfg(server_addr, 2007).get_cfg()
+        print(readRemoteCfg)
+        self.parser = HtmlParser(readRemoteCfg)
         print('init finish')
 
     def crawl(self):
@@ -38,8 +44,8 @@ class SpiderWork(object):
                         self.result.put({'new_urls':'end','data':'end'})
                         return
                     print('爬虫节点正在解析:%s'%url.encode('utf-8'))
-                    content = self.downloader.download(url)
-                    new_urls,data = self.parser.parser(url,content)
+                    encoding, content = self.downloader.download(url)
+                    new_urls,data = self.parser.parser(url,content.encode(encoding))
                     self.result.put({"new_urls":new_urls,"data":data})
             except EOFError as e:
                 print("连接工作节点失败")
@@ -52,5 +58,6 @@ class SpiderWork(object):
 
 
 if __name__=="__main__":
+    logging.basicConfig(format="%(asctime)s %(name)s %(levelname)s %(message)s", filename='SpiderWork.log',level=logging.INFO)
     spider = SpiderWork()
     spider.crawl()

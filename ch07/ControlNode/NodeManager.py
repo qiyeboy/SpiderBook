@@ -3,11 +3,13 @@
 from multiprocessing.managers import BaseManager
 
 import time
+import json
 
 from multiprocessing import Process, Queue
 
 from .DataOutput import DataOutput
 from .UrlManager import UrlManager
+from .ServerCfg import target_server
 
 
 class NodeManager(object):
@@ -40,8 +42,11 @@ class NodeManager(object):
                 #将新的URL发给工作节点
                 url_q.put(new_url)
                 print('old_url=',url_manager.old_url_size())
-                #加一个判断条件，当爬去2000个链接后就关闭,并保存进度
-                if(url_manager.old_url_size()>2000):
+                #加一个判断条件，10000并保存进度
+                if url_manager.old_url_size()%10000 == 0:
+                    url_manager.save_progress('new_urls.txt',url_manager.new_urls)
+                    url_manager.save_progress('old_urls.txt',url_manager.old_urls)
+                if(url_manager.old_url_size()>20000000):
                     #通知爬行节点工作结束
                     url_q.put('end')
                     print('控制节点发起结束通知!')
@@ -84,7 +89,7 @@ class NodeManager(object):
                 data = store_q.get()
                 if data=='end':
                     print('存储进程接受通知然后结束!')
-                    output.ouput_end(output.filepath)
+                    #output.ouput_end(output.filepath)
 
                     return
                 output.store_data(data)
@@ -95,21 +100,30 @@ class NodeManager(object):
 
 if __name__=='__main__':
     #初始化4个队列
-
     url_q = Queue()
     result_q = Queue()
     store_q = Queue()
     conn_q = Queue()
+
     #创建分布式管理器
     node = NodeManager()
     manager = node.start_Manager(url_q,result_q)
     #创建URL管理进程、 数据提取进程和数据存储进程
-    url_manager_proc = Process(target=node.url_manager_proc, args=(url_q,conn_q,'http://baike.baidu.com/view/284853.htm',))
+    url_manager_proc = Process(target=node.url_manager_proc, args=(url_q,conn_q,'http://www.haodf.com',))
     result_solve_proc = Process(target=node.result_solve_proc, args=(result_q,conn_q,store_q,))
     store_proc = Process(target=node.store_proc, args=(store_q,))
     #启动3个进程和分布式管理器
     url_manager_proc.start()
     result_solve_proc.start()
     store_proc.start()
+
+    #添加url， key 的过滤规则
+    keywords = {'url_fiter_keys':["jpg", "bmp", "exe"], 'url_reverse_keys':['haodf']}
+    server_proc = Process(target=target_server, kwargs=keywords)
+    server_proc.start()
+
     manager.get_server().serve_forever()
+
+
+
 
