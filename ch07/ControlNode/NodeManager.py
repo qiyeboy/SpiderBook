@@ -98,8 +98,8 @@ class NodeManager(object):
                 time.sleep(0.1)#延时休息
 
 
-    def store_proc(self,store_q):
-        output = DataOutput()
+    def store_proc(self,store_q, store_file_name):
+        output = DataOutput(store_file_name)
         while True:
             try:
                 #logging.info("store_proc")
@@ -130,16 +130,17 @@ if __name__=='__main__':
     node = NodeManager()
     manager = node.start_Manager(url_q,result_q)
     #创建URL管理进程、 数据提取进程和数据存储进程
-    url_manager_proc = Process(target=node.url_manager_proc, args=(url_q,conn_q,'http://3g.haodf.com',))
+    ROOT_URL = "http://m.jrj.com.cn"
+    url_manager_proc = Process(target=node.url_manager_proc, args=(url_q,conn_q,ROOT_URL))
     result_solve_proc = Process(target=node.result_solve_proc, args=(result_q,conn_q,store_q,))
-    store_proc = Process(target=node.store_proc, args=(store_q,))
+    store_proc = Process(target=node.store_proc, args=(store_q,ROOT_URL.split("http://")[1]))
     #启动3个进程和分布式管理器
     url_manager_proc.start()
     result_solve_proc.start()
     store_proc.start()
 
     #添加url， key 的过滤规则
-    keywords = {'url_fiter_keys':["jpg", "bmp", "exe"], 'url_reverse_keys':['haodf']}
+    keywords = {'url_fiter_keys':["jpg", "bmp", "exe"], 'url_reverse_keys':['jrj']}
     server_proc = Process(target=target_server, kwargs=keywords)
     server_proc.start()
 

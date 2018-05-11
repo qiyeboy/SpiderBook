@@ -2,11 +2,12 @@
 import codecs
 import time
 import logging
+import os
 
 
 class DataOutput(object):
-    def __init__(self):
-        self.filepath='dxy_%s.txt'%(time.strftime("%Y_%m_%d_%H_%M_%S", time.localtime()) )
+    def __init__(self, store_file_name=None):
+        self.filepath='%s_%s.txt'%(store_file_name,time.strftime("%Y_%m_%d_%H_%M_%S", time.localtime()))
         #self.output_head(self.filepath)
         self.datas=[]
 
@@ -49,11 +50,14 @@ class DataOutput(object):
         fout.close()
 
     def output_text(self, path):
+        if not os.path.exists( path ):
+            with open(path,'w+',encoding='utf-8') as fout:
+                pass
         with open(path,'a+',encoding='utf-8') as fout:
             for data in self.datas:
                 texts = data['summary']
                 for text in texts:
-                    logging.info("text:{}".format(text))
+                    #logging.info("text:{}".format(text))
                     fout.write("{}\n".format(text))
             self.datas=[]
 
