@@ -140,7 +140,7 @@ if __name__=='__main__':
     store_proc.start()
 
     #添加url， key 的过滤规则
-    keywords = {'url_fiter_keys':["jpg", "bmp", "exe"], 'url_reverse_keys':['jrj']}
+    keywords = {'url_fiter_keys':["jpg", "bmp", "exe", "pdf"], 'url_reverse_keys':['jrj']}
     server_proc = Process(target=target_server, kwargs=keywords)
     server_proc.start()
 
