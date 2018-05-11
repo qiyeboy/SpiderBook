@@ -45,6 +45,6 @@ class HtmlDownloader(object):
         headers={'User-Agent':random.choice(user_agent_list)}
         r = requests.get(url,headers=headers, timeout=1)
         if r.status_code==200:
-            return  r.encoding, r.text
+            return r.content
         return None
 

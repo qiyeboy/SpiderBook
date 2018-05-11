@@ -22,7 +22,8 @@ class ReadRemoteCfg:
                 socke_buffer.append(szBuf)
             else:
                 break
-        self.dict_msg =json.loads(b''.join(socke_buffer))
+        logging.info("socke_buffer:{}".format(socke_buffer))
+        self.dict_msg =json.loads(b''.join(socke_buffer).decode('utf-8'))
         sock.close()
 
     def get_cfg(self):

@@ -1,6 +1,9 @@
 #coding:utf-8
 import codecs
 import time
+import logging
+
+
 class DataOutput(object):
     def __init__(self):
         self.filepath='dxy_%s.txt'%(time.strftime("%Y_%m_%d_%H_%M_%S", time.localtime()) )
@@ -50,6 +53,7 @@ class DataOutput(object):
             for data in self.datas:
                 texts = data['summary']
                 for text in texts:
+                    logging.info("text:{}".format(text))
                     fout.write("{}\n".format(text))
             self.datas=[]
 

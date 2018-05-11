@@ -41,24 +41,16 @@ def target_server(**kwargs):
         logging.error("bind listen error")
         logging.info("error message：{}".format(e))
 
-    signal.signal(signal.SIGCHLD, grim_reaper)
+    #signal.signal(signal.SIGCHLD, grim_reaper)
 
     while True:
         connection, client_address = server.accept()
         logging.info("connection:{} client_address:{}".format(connection, client_address))
         #print "connection", connection
-        pid = os.fork()
-        if pid == 0:
-            server.close()
-            print( "%s connect. " %str(client_address) )
-            handle(connection, client_address)
-            logging.info("child connection field id:{}".format(connection))
-            connection.close()
-            os._exit(0)
-        else:
-            logging.info("parent connection field id:{}".format(connection))
-            connection.close()
-
+        print( "%s connect. " %str(client_address) )
+        handle(connection, client_address)
+        logging.info("child connection field id:{}".format(connection))
+        connection.close()
 
 if __name__ == '__main__':
     keywords = {'url_fiter_keys':["dxy"]}
