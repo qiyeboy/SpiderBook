@@ -3,14 +3,34 @@
 from multiprocessing.managers import BaseManager
 
 import time
+import json
+import logging
+import signal
+import os
+import sys
 
 from multiprocessing import Process, Queue
 
 from .DataOutput import DataOutput
 from .UrlManager import UrlManager
+from .ServerCfg import target_server
 
 
 class NodeManager(object):
+    def __init__(self):
+         signal.signal(signal.SIGINT, self.signal_handler)
+         self.url_manager = UrlManager()
+
+    def signal_handler(self,signum,stack):
+        url_manager = self.url_manager
+        logging.info('Received:{}'.format(signum))
+        logging.info("url_manager.new_urls:{}".format(url_manager.new_urls))
+        logging.info("url_manager.old_urls:{}".format(url_manager.old_urls))
+        if(url_manager.new_urls):
+            url_manager.save_progress('new_urls.txt',url_manager.new_urls)
+        if(url_manager.old_urls):
+            url_manager.save_progress('old_urls.txt',url_manager.old_urls)
+        os._exit(0)
 
     def start_Manager(self,url_q,result_q):
         '''
@@ -30,18 +50,18 @@ class NodeManager(object):
 
 
     def url_manager_proc(self,url_q,conn_q,root_url):
-        url_manager = UrlManager()
+        url_manager = self.url_manager
         url_manager.add_new_url(root_url)
         while True:
-            while(url_manager.has_new_url()):
-
+            if url_manager.has_new_url():
                 #从URL管理器获取新的url
                 new_url = url_manager.get_new_url()
                 #将新的URL发给工作节点
                 url_q.put(new_url)
+                print('new_url=',url_manager.new_url_size())
                 print('old_url=',url_manager.old_url_size())
-                #加一个判断条件，当爬去2000个链接后就关闭,并保存进度
-                if(url_manager.old_url_size()>2000):
+                #加一个判断条件，1000并保存进度
+                if(url_manager.old_url_size()>20000000):
                     #通知爬行节点工作结束
                     url_q.put('end')
                     print('控制节点发起结束通知!')
@@ -51,8 +71,9 @@ class NodeManager(object):
                     return
             #将从result_solve_proc获取到的urls添加到URL管理器之间
             try:
-                urls = conn_q.get()
-                url_manager.add_new_urls(urls)
+                urls = conn_q.get(block=False)
+                if urls:
+                    url_manager.add_new_urls(urls)
             except BaseException as e:
                 time.sleep(0.1)#延时休息
 
@@ -77,39 +98,54 @@ class NodeManager(object):
                 time.sleep(0.1)#延时休息
 
 
-    def store_proc(self,store_q):
-        output = DataOutput()
+    def store_proc(self,store_q, store_file_name):
+        output = DataOutput(store_file_name)
         while True:
-            if not store_q.empty():
-                data = store_q.get()
-                if data=='end':
-                    print('存储进程接受通知然后结束!')
-                    output.ouput_end(output.filepath)
-
-                    return
-                output.store_data(data)
-            else:
+            try:
+                #logging.info("store_proc")
+                if not store_q.empty():
+                    data = store_q.get(True)
+                    if data=='end':
+                        print('存储进程接受通知然后结束!')
+                        #output.ouput_end(output.filepath)
+                        return
+                    output.store_data(data)
+                else:
+                    time.sleep(0.1)#延时休息
+            except Exception as e:
                 time.sleep(0.1)
-        pass
-
+                logging.error(str(e))
 
 if __name__=='__main__':
+   
+    
+    logging.basicConfig(format="%(asctime)s %(name)s %(levelname)s %(message)s", filename='NodeManager.log',level=logging.INFO)
     #初始化4个队列
-
     url_q = Queue()
     result_q = Queue()
     store_q = Queue()
     conn_q = Queue()
+
     #创建分布式管理器
     node = NodeManager()
     manager = node.start_Manager(url_q,result_q)
     #创建URL管理进程、 数据提取进程和数据存储进程
-    url_manager_proc = Process(target=node.url_manager_proc, args=(url_q,conn_q,'http://baike.baidu.com/view/284853.htm',))
+    ROOT_URL = "http://m.jrj.com.cn"
+    url_manager_proc = Process(target=node.url_manager_proc, args=(url_q,conn_q,ROOT_URL))
     result_solve_proc = Process(target=node.result_solve_proc, args=(result_q,conn_q,store_q,))
-    store_proc = Process(target=node.store_proc, args=(store_q,))
+    store_proc = Process(target=node.store_proc, args=(store_q,ROOT_URL.split("http://")[1]))
     #启动3个进程和分布式管理器
     url_manager_proc.start()
     result_solve_proc.start()
     store_proc.start()
+
+    #添加url， key 的过滤规则
+    keywords = {'url_fiter_keys':["jpg", "bmp", "exe", "pdf"], 'url_reverse_keys':['jrj']}
+    server_proc = Process(target=target_server, kwargs=keywords)
+    server_proc.start()
+
     manager.get_server().serve_forever()
+
+
+
 
